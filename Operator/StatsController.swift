@@ -8,13 +8,33 @@
 
 import UIKit
 
+private let inputFormatter: DateFormatter = {
+  let inputFormatter = DateFormatter()
+  inputFormatter.dateFormat = "MMM/dd/yyyy HH:mm:ss"
+  inputFormatter.locale = Locale(identifier: "en_US_POSIX")
+  return inputFormatter
+}()
+
+private let dateFormatter: DateFormatter = {
+  let dateFormatter = DateFormatter()
+  dateFormatter.dateStyle = .medium
+  dateFormatter.timeStyle = .medium
+  return dateFormatter
+}()
+
 struct Stats: Equatable {
   let presentable: [Item]
   init(pairs: [(key: String, value: String)]) {
     presentable = pairs
       .filter { key, _ in key != ".id" }
       .map { pair in
-        let (key, value) = pair
+        var (key, value) = pair
+        if
+          key == "last-link-up-time",
+          let date = inputFormatter.date(from: value)
+        {
+          value = dateFormatter.string(from: date)
+        }
         var title = key
         title = title.capitalized
         title = title.replacingOccurrences(of: "-", with: " ")
