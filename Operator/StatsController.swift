@@ -88,8 +88,8 @@ extension StatsController: UICollectionViewDataSource {
   ) -> UICollectionViewCell {
     guard
       let cell = collectionView.dequeueReusableCell(
-        withReuseIdentifier: "StatsTitleValueCell",
-        for: indexPath) as? StatsTitleValueCell
+        withReuseIdentifier: "StatsItemCell",
+        for: indexPath) as? StatsItemCell
     else {
       fatalError("Unrecognized cell")
     }
@@ -100,9 +100,35 @@ extension StatsController: UICollectionViewDataSource {
   }
 }
 
-final class StatsTitleValueCell: UICollectionViewCell {
+final class StatsItemCell: UICollectionViewCell {
 
   @IBOutlet weak var titleLabel: UILabel!
   @IBOutlet weak var valueLabel: UILabel!
 
+  override init(frame: CGRect) {
+    super.init(frame: frame)
+    contentView.layer.addSublayer(borderLayer)
+  }
+
+  required init?(coder decoder: NSCoder) {
+    super.init(coder: decoder)
+    contentView.layer.addSublayer(borderLayer)
+  }
+
+  override func layoutSubviews() {
+    super.layoutSubviews()
+    let contentFrame = contentView.layer.frame
+    let hairline = 1.0 / UIScreen.main.scale
+    borderLayer.frame = CGRect(
+      x: contentFrame.minX + 12,
+      y: contentFrame.maxY - hairline,
+      width: contentFrame.width - 12,
+      height: hairline)
+  }
+
+  let borderLayer: CALayer = {
+    let layer = CALayer()
+    layer.backgroundColor = UIColor(white: 0.84, alpha: 1).cgColor
+    return layer
+  }()
 }
