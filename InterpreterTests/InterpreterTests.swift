@@ -7,28 +7,34 @@
 //
 
 import XCTest
-@testable import Interpreter
+import Interpreter
 
 class InterpreterTests: XCTestCase {
+  func testEncodedSentenceIsDecodable() {
+    let commands = [Sentence(words: [
+      .command("example"),
+      .attribute(key: "key", value: "value"),
+      .attribute(key: "valueless", value: nil),
+      .query("some"),
+      .empty,
+    ])]
 
-    override func setUp() {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
+    let encoded: Data
+    do {
+      encoded = try encode(sentences: commands)
+    } catch {
+      XCTFail("Can't encode sentence, error: \(error)")
+      return
     }
 
-    override func tearDown() {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
+    let decoded: [Sentence]
+    do {
+      decoded = try decode(data: encoded)
+    } catch {
+      XCTFail("Can't decode data, error: \(error)")
+      return
     }
 
-    func testExample() {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
-    }
-
-    func testPerformanceExample() {
-        // This is an example of a performance test case.
-        self.measure {
-            // Put the code you want to measure the time of here.
-        }
-    }
-
+    XCTAssertEqual(commands, decoded)
+  }
 }
