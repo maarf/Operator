@@ -1,5 +1,5 @@
 //
-//  Interpreter.swift
+//  Coding.swift
 //  Interpreter
 //
 //  Created by Martins on 03/12/2018.
