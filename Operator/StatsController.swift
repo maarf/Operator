@@ -15,7 +15,20 @@ struct Stats: Equatable {
       .filter { key, _ in key != ".id" }
       .map { pair in
         let (key, value) = pair
-        return Item(title: key, value: value)
+        var title = key
+        title = title.capitalized
+        title = title.replacingOccurrences(of: "-", with: " ")
+        title = title.replacingOccurrences(of: "Mtu", with: "MTU")
+        title = title.replacingOccurrences(of: "Mac", with: "MAC")
+        title = title.replacingOccurrences(of: "Up Time", with: "Uptime")
+        title = title.replacingOccurrences(of: "Rx", with: "RX")
+        title = title.replacingOccurrences(of: "Tx", with: "TX")
+        title = title.replacingOccurrences(of: "Fp", with: "FP")
+        title = title.replacingOccurrences(of: "Byte", with: "Bytes")
+        title = title.replacingOccurrences(of: "Packet", with: "Packets")
+        title = title.replacingOccurrences(of: "Drop", with: "Drops")
+        title = title.replacingOccurrences(of: "Error", with: "Errors")
+        return Item(title: title, value: value)
       }
   }
   struct Item: Equatable {
