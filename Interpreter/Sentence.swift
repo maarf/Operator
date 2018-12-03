@@ -22,6 +22,7 @@ public enum Word: RawRepresentable, Equatable {
   case command(String)
   case reply(String)
   case attribute(key: String, value: String?)
+  case apiAttribute(key: String, value: String)
   case query(String)
   case empty
 
@@ -33,6 +34,8 @@ public enum Word: RawRepresentable, Equatable {
         return "!" + reply
       case .attribute(let key, let value):
         return "=" + key + "=" + (value ?? "")
+      case .apiAttribute(let key, let value):
+        return "." + key + "=" + value
       case .query(let query):
         return "?" + query
       case .empty:
@@ -58,10 +61,24 @@ public enum Word: RawRepresentable, Equatable {
         self = .attribute(
           key: String(key),
           value: value.isEmpty ? nil : String(value))
+      case ".":
+        guard let separatorIndex = rest.firstIndex(of: "=") else { return nil }
+        let key = rest[..<separatorIndex]
+        let value = rest[rest.index(after: separatorIndex)...]
+        self = .apiAttribute(
+          key: String(key),
+          value: String(value))
       case "?":
         self = .query(String(rest))
       default:
         return nil
+    }
+  }
+
+  var tag: String? {
+    switch self {
+      case .apiAttribute(let key, let value): return key == "tag" ? value : nil
+      default: return nil
     }
   }
 }

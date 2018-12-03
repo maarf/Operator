@@ -35,8 +35,8 @@ final class MainController {
       return try Client(
         hostname: "77.38.162.131",
         port: 8728,
-        onReceive: handleResponse,
-        onError: handleError)
+        onReceive: logResponse,
+        onError: logError)
     } catch {
       os_log("Error when logging in: %@", error as CVarArg)
       return nil
@@ -45,37 +45,44 @@ final class MainController {
 
   private func logIn(username: String, password: String) {
     do {
-      try client?.send(sentences: [Sentence(words: [
+      let login = Sentence(words: [
         .command("login"),
         .attribute(key: "name", value: username),
         .attribute(key: "password", value: password),
-        .empty,
-      ])])
+      ])
+      try client?.send(sentence: login, onResponse: handleLoginResponse)
     } catch {
       os_log("Error when logging in: %@", error as CVarArg)
     }
   }
 
-  private func printStatus() {
+  private func handleLoginResponse(_ sentences: [Sentence]) {
+    if sentences.first?.words.first == .reply("done") {
+      getStats()
+    }
+  }
+
+  private func getStats() {
     do {
-      try client?.send(sentences: [Sentence(words: [
+      let getStats = Sentence(words: [
         .command("interface/print"),
         .attribute(key: "stats", value: nil),
-        .empty,
-      ])])
+      ])
+      try client?.send(sentence: getStats, onResponse: updateStats)
     } catch {
       os_log("Error when printing status: %@", error as CVarArg)
     }
   }
 
-  private func handleResponse(_ sentences: [Sentence]) {
-    os_log("Received: %@", sentences)
-    if sentences.first?.words.first == .reply("done") {
-      printStatus()
-    }
+  private func updateStats(from sentences: [Sentence]) {
+    os_log("Received stats: %@", sentences)
   }
 
-  private func handleError(_ error: Error) {
+  private func logResponse(_ sentences: [Sentence]) {
+    os_log("Received: %@", sentences)
+  }
+
+  private func logError(_ error: Error) {
     os_log("Error: %@", type: .error, error as CVarArg)
   }
 }

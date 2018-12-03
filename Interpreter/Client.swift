@@ -12,11 +12,13 @@ import Foundation
 public class Client {
 
   private let socket: Socket
-  private let onReceive: ([Sentence]) -> Void
-  private let onError: (Error) -> Void
+  private let onReceive: (([Sentence]) -> Void)?
+  private let onError: ((Error) -> Void)?
   private let queue = DispatchQueue(
     label: "Interpreter.Client.queue",
     qos: DispatchQoS.utility)
+  private var lastTag = 0
+  private var taggedOnResponse = [Int: ([Sentence]) -> Void]()
 
   public init(
     hostname: String,
@@ -37,37 +39,71 @@ public class Client {
     listen()
   }
 
+  deinit {
+    socket.close()
+  }
+
   private func listen() {
-    queue.async {
-      var shouldKeepRunning = true
-      repeat {
+    queue.async { [unowned self] in
+      // TODO: Ownership here is quite funky, this might crash.
+      while true {
         var bytesRead = 0
         var data = Data()
         do {
           bytesRead = try self.socket.read(into: &data)
         } catch {
-          self.onError(error)
+          self.onError?(error)
         }
         if bytesRead > 0 {
           do {
             let decoded = try decode(data: data)
-            self.onReceive(decoded)
+            self.onReceive?(decoded)
+            for (tag, sentences) in self.groupByTags(sentences: decoded) {
+              if let onResponse = self.taggedOnResponse.removeValue(forKey: tag) {
+                onResponse(sentences)
+              }
+            }
           } catch {
-            self.onError(error)
+            self.onError?(error)
           }
         } else {
-          shouldKeepRunning = false
+          return
         }
-      } while shouldKeepRunning
+      }
     }
   }
 
-  public func send(sentences: [Sentence]) throws {
-    let encoded = try encode(sentences: sentences)
+  public func send(
+    sentence: Sentence,
+    onResponse: (([Sentence]) -> Void)? = nil
+  ) throws {
+    var sentence = sentence
+    if let onResponse = onResponse {
+      lastTag += 1
+      taggedOnResponse[lastTag] = onResponse
+      sentence.words.append(.apiAttribute(key: "tag", value: String(lastTag)))
+    }
+    sentence.words.append(.empty)
+    let encoded = try encode(sentences: [sentence])
     try socket.write(from: encoded)
   }
 
-  deinit {
-    socket.close()
+  private func groupByTags(sentences: [Sentence]) -> [Int: [Sentence]] {
+    return sentences.reduce([Int: [Sentence]]()) { result, sentence in
+      var result = result
+      if
+        let tag = sentence.words
+          .first(where: { $0.tag != nil })?
+          .tag
+          .flatMap({ Int($0) })
+      {
+        if result[tag] != nil {
+          result[tag]!.append(sentence)
+        } else {
+          result[tag] = [sentence]
+        }
+      }
+      return result
+    }
   }
 }
