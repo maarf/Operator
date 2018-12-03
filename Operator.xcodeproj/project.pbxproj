@@ -9,8 +9,8 @@
 /* Begin PBXBuildFile section */
 		662AACAF85C7418D7EB2C63C /* Pods_Interpreter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AF77537E532D6B0F992F6BC /* Pods_Interpreter.framework */; };
 		D46685A421B5520B009061C5 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D46685A321B5520B009061C5 /* AppDelegate.swift */; };
-		D46685A621B5520B009061C5 /* MasterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D46685A521B5520B009061C5 /* MasterViewController.swift */; };
-		D46685A821B5520B009061C5 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D46685A721B5520B009061C5 /* DetailViewController.swift */; };
+		D46685A621B5520B009061C5 /* RoutersController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D46685A521B5520B009061C5 /* RoutersController.swift */; };
+		D46685A821B5520B009061C5 /* StatsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D46685A721B5520B009061C5 /* StatsController.swift */; };
 		D46685AB21B5520C009061C5 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D46685A921B5520C009061C5 /* Main.storyboard */; };
 		D46685AD21B5520E009061C5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D46685AC21B5520E009061C5 /* Assets.xcassets */; };
 		D46685B021B5520E009061C5 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D46685AE21B5520E009061C5 /* LaunchScreen.storyboard */; };
@@ -88,8 +88,8 @@
 		B90A66D04EB7A31EB917A238 /* Pods-Operator.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Operator.debug.xcconfig"; path = "Target Support Files/Pods-Operator/Pods-Operator.debug.xcconfig"; sourceTree = "<group>"; };
 		D46685A021B5520B009061C5 /* Operator.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Operator.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D46685A321B5520B009061C5 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		D46685A521B5520B009061C5 /* MasterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MasterViewController.swift; sourceTree = "<group>"; };
-		D46685A721B5520B009061C5 /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
+		D46685A521B5520B009061C5 /* RoutersController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutersController.swift; sourceTree = "<group>"; };
+		D46685A721B5520B009061C5 /* StatsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsController.swift; sourceTree = "<group>"; };
 		D46685AA21B5520C009061C5 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		D46685AC21B5520E009061C5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		D46685AF21B5520E009061C5 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -207,8 +207,8 @@
 			children = (
 				D46685A321B5520B009061C5 /* AppDelegate.swift */,
 				D46685FD21B59860009061C5 /* MainController.swift */,
-				D46685A521B5520B009061C5 /* MasterViewController.swift */,
-				D46685A721B5520B009061C5 /* DetailViewController.swift */,
+				D46685A521B5520B009061C5 /* RoutersController.swift */,
+				D46685A721B5520B009061C5 /* StatsController.swift */,
 				D46685A921B5520C009061C5 /* Main.storyboard */,
 				D46685AC21B5520E009061C5 /* Assets.xcassets */,
 				D46685AE21B5520E009061C5 /* LaunchScreen.storyboard */,
@@ -540,8 +540,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D46685A821B5520B009061C5 /* DetailViewController.swift in Sources */,
-				D46685A621B5520B009061C5 /* MasterViewController.swift in Sources */,
+				D46685A821B5520B009061C5 /* StatsController.swift in Sources */,
+				D46685A621B5520B009061C5 /* RoutersController.swift in Sources */,
 				D46685A421B5520B009061C5 /* AppDelegate.swift in Sources */,
 				D46685FE21B59860009061C5 /* MainController.swift in Sources */,
 			);

@@ -1,5 +1,5 @@
 //
-//  AppController.swift
+//  MainController.swift
 //  Operator
 //
 //  Created by Martins on 03/12/2018.
@@ -17,15 +17,23 @@ final class MainController {
   init(window: UIWindow) {
     self.window = window
 
-    if
-      let split = window.rootViewController as? UISplitViewController,
-      let top = split.topViewController
-    {
+    if let split = splitController, let top = split.topViewController {
       top.navigationItem.leftBarButtonItem = split.displayModeButtonItem
       split.delegate = self
     }
 
     logIn(username: "ios", password: "developer")
+  }
+
+  // MARK: - View controllers
+
+  var splitController: UISplitViewController? {
+    return window.rootViewController as? UISplitViewController
+  }
+
+  var routersController: RoutersController? {
+    return (splitController?.viewControllers.first as? UINavigationController)?
+      .viewControllers.first as? RoutersController
   }
 
   // MARK: - RouterOS client
@@ -76,6 +84,28 @@ final class MainController {
 
   private func updateStats(from sentences: [Sentence]) {
     os_log("Received stats: %@", sentences)
+
+    let stats = sentences
+      .compactMap { sentence -> Stats? in
+        guard sentence.words.first == .reply("re") else { return nil }
+        let pairs = sentence.words
+          .compactMap { word -> (key: String, value: String)? in
+            guard
+              case let .attribute(key, maybeValue) = word,
+              let value = maybeValue
+            else { return nil }
+            return (key: key, value: value)
+          }
+        return Stats(pairs: pairs)
+      }
+    let router = Router(
+      hostname: "77.38.162.131",
+      port: 8728,
+      isConnected: true,
+      stats: stats)
+    DispatchQueue.main.async {
+      self.routersController?.routers.append(router)
+    }
   }
 
   private func logResponse(_ sentences: [Sentence]) {
@@ -95,8 +125,8 @@ extension MainController: UISplitViewControllerDelegate {
   ) -> Bool {
     if
       let secondary = secondary as? UINavigationController,
-      let top = secondary.topViewController as? DetailViewController,
-      top.detailItem == nil
+      let top = secondary.topViewController as? StatsController,
+      top.stats == []
     {
       return true
     }
