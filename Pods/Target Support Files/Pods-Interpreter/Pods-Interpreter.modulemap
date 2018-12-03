@@ -1,0 +1,6 @@
+framework module Pods_Interpreter {
+  umbrella header "Pods-Interpreter-umbrella.h"
+
+  export *
+  module * { export * }
+}

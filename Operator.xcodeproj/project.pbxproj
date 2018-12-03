@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		662AACAF85C7418D7EB2C63C /* Pods_Interpreter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AF77537E532D6B0F992F6BC /* Pods_Interpreter.framework */; };
 		D46685A421B5520B009061C5 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D46685A321B5520B009061C5 /* AppDelegate.swift */; };
 		D46685A621B5520B009061C5 /* MasterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D46685A521B5520B009061C5 /* MasterViewController.swift */; };
 		D46685A821B5520B009061C5 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D46685A721B5520B009061C5 /* DetailViewController.swift */; };
@@ -77,6 +78,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		0AF77537E532D6B0F992F6BC /* Pods_Interpreter.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Interpreter.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		2D6E3D340A1E48911FE2E305 /* Pods-Interpreter.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Interpreter.release.xcconfig"; path = "Target Support Files/Pods-Interpreter/Pods-Interpreter.release.xcconfig"; sourceTree = "<group>"; };
 		D46685A021B5520B009061C5 /* Operator.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Operator.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D46685A321B5520B009061C5 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		D46685A521B5520B009061C5 /* MasterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MasterViewController.swift; sourceTree = "<group>"; };
@@ -99,6 +102,7 @@
 		D46685E921B55421009061C5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D46685F721B55495009061C5 /* Interpreter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Interpreter.swift; sourceTree = "<group>"; };
 		D46685F921B55AD7009061C5 /* Sentence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sentence.swift; sourceTree = "<group>"; };
+		F1A1EC81979BB501F9F928F1 /* Pods-Interpreter.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Interpreter.debug.xcconfig"; path = "Target Support Files/Pods-Interpreter/Pods-Interpreter.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -128,6 +132,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				662AACAF85C7418D7EB2C63C /* Pods_Interpreter.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -142,6 +147,23 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		78CFC0A4021F06508845BBA2 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				0AF77537E532D6B0F992F6BC /* Pods_Interpreter.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		A3529B20FA1DBB455CE65EC1 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				F1A1EC81979BB501F9F928F1 /* Pods-Interpreter.debug.xcconfig */,
+				2D6E3D340A1E48911FE2E305 /* Pods-Interpreter.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
 		D466859721B5520B009061C5 = {
 			isa = PBXGroup;
 			children = (
@@ -151,6 +173,8 @@
 				D46685D921B55420009061C5 /* Interpreter */,
 				D46685E621B55421009061C5 /* InterpreterTests */,
 				D46685A121B5520B009061C5 /* Products */,
+				A3529B20FA1DBB455CE65EC1 /* Pods */,
+				78CFC0A4021F06508845BBA2 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -299,6 +323,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = D46685F321B55421009061C5 /* Build configuration list for PBXNativeTarget "Interpreter" */;
 			buildPhases = (
+				076F40E302700621D8F3D75C /* [CP] Check Pods Manifest.lock */,
 				D46685D321B55420009061C5 /* Headers */,
 				D46685D421B55420009061C5 /* Sources */,
 				D46685D521B55420009061C5 /* Frameworks */,
@@ -424,6 +449,31 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		076F40E302700621D8F3D75C /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Interpreter-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		D466859C21B5520B009061C5 /* Sources */ = {
@@ -757,6 +807,7 @@
 		};
 		D46685EF21B55421009061C5 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = F1A1EC81979BB501F9F928F1 /* Pods-Interpreter.debug.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
@@ -787,6 +838,7 @@
 		};
 		D46685F021B55421009061C5 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2D6E3D340A1E48911FE2E305 /* Pods-Interpreter.release.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
