@@ -8,6 +8,7 @@
 
 import UIKit
 
+/// Presents a list of available routers.
 final class RoutersController: UITableViewController, StateSubscriber {
 
   var statsController: StatsController? = nil

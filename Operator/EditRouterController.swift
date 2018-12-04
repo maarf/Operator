@@ -8,6 +8,7 @@
 
 import UIKit
 
+/// Presents a form to edit a router details.
 final class EditRouterController: UITableViewController {
 
   var stateStore: StateStore?

@@ -15,6 +15,7 @@ private struct ClientState {
   var timer: Timer
 }
 
+/// Owns all clients to routers and orchestrates statistics pulling.
 final class ClientsController: NSObject, StateSubscriber {
 
   private let stateStore: StateStore

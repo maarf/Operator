@@ -8,6 +8,7 @@
 
 import UIKit
 
+/// Presents router specific statistics.
 final class StatsController: UIViewController, StateSubscriber {
 
   @IBOutlet weak var collectionView: UICollectionView!

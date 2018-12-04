@@ -9,6 +9,8 @@
 import Interpreter
 import UIKit
 
+/// Main controller of the app that owns other non-view controller related
+/// things.
 final class MainController {
 
   let window: UIWindow
