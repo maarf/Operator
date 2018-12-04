@@ -66,7 +66,8 @@ extension StatsController: UICollectionViewDataSource {
     _ collectionView: UICollectionView,
     cellForItemAt indexPath: IndexPath
   ) -> UICollectionViewCell {
-    let item = stats[indexPath.section].presentable[indexPath.item]
+    let statsEntry = stats[indexPath.section]
+    let item = statsEntry.presentable[indexPath.item]
 
     guard
       let cell = collectionView.dequeueReusableCell(
@@ -79,6 +80,13 @@ extension StatsController: UICollectionViewDataSource {
     }
     cell.titleLabel.text = item.title
     cell.valueLabel.text = item.value
+    if let values = statsEntry.graphValues(forKey: item.key) {
+      cell.graphLayer.isHidden = false
+      cell.graphLayer.values = values
+    } else {
+      cell.graphLayer.isHidden = true
+      cell.graphLayer.values = []
+    }
     return cell
   }
 
@@ -124,43 +132,4 @@ extension StatsController: UICollectionViewDelegateFlowLayout {
           height: 44)
     }
   }
-}
-
-final class StatsItemCell: UICollectionViewCell {
-
-  @IBOutlet weak var titleLabel: UILabel!
-  @IBOutlet weak var valueLabel: UILabel!
-
-  override init(frame: CGRect) {
-    super.init(frame: frame)
-    contentView.layer.addSublayer(borderLayer)
-  }
-
-  required init?(coder decoder: NSCoder) {
-    super.init(coder: decoder)
-    contentView.layer.addSublayer(borderLayer)
-  }
-
-  override func layoutSubviews() {
-    super.layoutSubviews()
-    let contentFrame = contentView.layer.frame
-    let hairline = 1.0 / UIScreen.main.scale
-    borderLayer.frame = CGRect(
-      x: contentFrame.minX + 12,
-      y: contentFrame.maxY - hairline,
-      width: contentFrame.width - 12,
-      height: hairline)
-  }
-
-  let borderLayer: CALayer = {
-    let layer = CALayer()
-    layer.backgroundColor = UIColor(white: 0.84, alpha: 1).cgColor
-    return layer
-  }()
-}
-
-final class StatsSectionHeader: UICollectionReusableView {
-
-  @IBOutlet weak var titleLabel: UILabel!
-
 }

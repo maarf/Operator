@@ -67,13 +67,34 @@ struct Stats {
           || key.contains("drop")
           || key.contains("error")
         return Item(
+          key: key,
           title: title,
           value: value,
           size: isCompact ? .compact : .normal)
       }
   }
 
+  func graphValues(forKey key: String) -> [Int]? {
+    switch key {
+      case "rx-byte": return transferData.map { $0.rxBytes }
+      case "tx-byte": return transferData.map { $0.txBytes }
+      case "rx-packet": return transferData.map { $0.rxPackets }
+      case "tx-packet": return transferData.map { $0.txPackets }
+      case "rx-drop": return transferData.map { $0.rxDrops }
+      case "tx-drop": return transferData.map { $0.txDrops }
+      case "rx-error": return transferData.map { $0.rxErrors }
+      case "tx-error": return transferData.map { $0.txErrors }
+      case "tx-queue-drop": return transferData.map { $0.txQueueDrops }
+      case "fp-rx-byte": return transferData.map { $0.fpRxBytes }
+      case "fp-tx-byte": return transferData.map { $0.fpTxBytes }
+      case "fp-rx-packet": return transferData.map { $0.fpRxPackets }
+      case "fp-tx-packet": return transferData.map { $0.fpTxPackets }
+      default: return nil
+    }
+  }
+
   struct Item: Equatable {
+    let key: String
     let title: String
     let value: String
     let size: Size
@@ -100,6 +121,11 @@ struct TransferDataPoint {
   var txDrops = 0
   var rxErrors = 0
   var txErrors = 0
+  var txQueueDrops = 0
+  var fpRxBytes = 0
+  var fpTxBytes = 0
+  var fpRxPackets = 0
+  var fpTxPackets = 0
 
   init(pairs: [(key: String, value: String)]) {
     for (key, value) in pairs {
@@ -107,11 +133,16 @@ struct TransferDataPoint {
         case "rx-byte": rxBytes = Int(value) ?? 0
         case "tx-byte": txBytes = Int(value) ?? 0
         case "rx-packet": rxPackets = Int(value) ?? 0
-        case "tx-packets": txPackets = Int(value) ?? 0
-        case "rx-drops": rxDrops = Int(value) ?? 0
-        case "tx-drops": txDrops = Int(value) ?? 0
-        case "rx-errors": rxErrors = Int(value) ?? 0
-        case "tx-errors": txErrors = Int(value) ?? 0
+        case "tx-packet": txPackets = Int(value) ?? 0
+        case "rx-drop": rxDrops = Int(value) ?? 0
+        case "tx-drop": txDrops = Int(value) ?? 0
+        case "rx-error": rxErrors = Int(value) ?? 0
+        case "tx-error": txErrors = Int(value) ?? 0
+        case "tx-queue-drop": txQueueDrops = Int(value) ?? 0
+        case "fp-rx-byte": fpRxBytes = Int(value) ?? 0
+        case "fp-tx-byte": fpTxBytes = Int(value) ?? 0
+        case "fp-rx-packet": fpRxPackets = Int(value) ?? 0
+        case "fp-tx-packet": fpTxPackets = Int(value) ?? 0
         default: ()
       }
     }
