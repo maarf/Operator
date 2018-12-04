@@ -48,12 +48,23 @@ struct Stats: Equatable {
         title = title.replacingOccurrences(of: "Packet", with: "Packets")
         title = title.replacingOccurrences(of: "Drop", with: "Drops")
         title = title.replacingOccurrences(of: "Error", with: "Errors")
-        return Item(title: title, value: value)
+        let isCompact = key.contains("byte")
+          || key.contains("packet")
+          || key.contains("drop")
+          || key.contains("error")
+        return Item(
+          title: title,
+          value: value,
+          size: isCompact ? .compact : .normal)
       }
   }
   struct Item: Equatable {
     let title: String
     let value: String
+    let size: Size
+    enum Size {
+      case compact, normal
+    }
   }
 }
 
@@ -64,6 +75,7 @@ final class StatsController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     collectionView.dataSource = self
+    collectionView.delegate = self
   }
 
   var stats = [Stats]()
@@ -86,17 +98,47 @@ extension StatsController: UICollectionViewDataSource {
     _ collectionView: UICollectionView,
     cellForItemAt indexPath: IndexPath
   ) -> UICollectionViewCell {
+    let item = stats[indexPath.section].presentable[indexPath.item]
+
     guard
       let cell = collectionView.dequeueReusableCell(
-        withReuseIdentifier: "StatsItemCell",
+        withReuseIdentifier: item.size == .compact
+          ? "StatsCompactItemCell"
+          : "StatsItemCell",
         for: indexPath) as? StatsItemCell
     else {
       fatalError("Unrecognized cell")
     }
-    let item = stats[indexPath.section].presentable[indexPath.item]
     cell.titleLabel.text = item.title
     cell.valueLabel.text = item.value
     return cell
+  }
+}
+
+extension StatsController: UICollectionViewDelegate {
+}
+
+extension StatsController: UICollectionViewDelegateFlowLayout {
+  func collectionView(
+    _ collectionView: UICollectionView,
+    layout collectionViewLayout: UICollectionViewLayout,
+    sizeForItemAt indexPath: IndexPath
+  ) -> CGSize {
+    let item = stats[indexPath.section].presentable[indexPath.item]
+    let safeWidth = collectionView.frame.size.width
+      - (collectionView.window?.safeAreaInsets.left ?? 0)
+      - (collectionView.window?.safeAreaInsets.right ?? 0)
+    switch item.size {
+      case .compact:
+        let columns = min(safeWidth / 120, 4)
+        return CGSize(
+          width: floor(safeWidth / columns),
+          height: 52)
+      case .normal:
+        return CGSize(
+          width: safeWidth,
+          height: 44)
+    }
   }
 }
 
