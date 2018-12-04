@@ -81,7 +81,7 @@ struct Stats: Equatable {
   }
 }
 
-final class StatsController: UIViewController {
+final class StatsController: UIViewController, StateSubscriber {
 
   @IBOutlet weak var collectionView: UICollectionView!
 
@@ -89,9 +89,39 @@ final class StatsController: UIViewController {
     super.viewDidLoad()
     collectionView.dataSource = self
     collectionView.delegate = self
+    collectionView.reloadData()
   }
 
-  var stats = [Stats]()
+  override func viewWillAppear(_ animated: Bool) {
+    stateStore?.subscribe(self)
+  }
+
+  override func viewDidDisappear(_ animated: Bool) {
+    stateStore?.unsubscribe(self)
+  }
+
+  // MARK: - State
+
+  var stateStore: StateStore?
+
+  func newState(_ state: State) {
+    if let routerId = state.selectedRouterId {
+      stats = state.stats[routerId] ?? []
+      title = state.routers
+        .first(where: { $0.id == routerId })?
+        .hostname
+        ?? "Stats"
+    }
+  }
+
+  var stats = [Stats]() {
+    didSet {
+      if collectionView != nil {
+        collectionView.reloadData()
+      }
+    }
+  }
+
 }
 
 extension StatsController: UICollectionViewDataSource {

@@ -9,22 +9,20 @@
 import UIKit
 
 struct Router: Equatable {
-  let hostname: String
-  let port: Int
-  let isConnected: Bool
-  let stats: [Stats]?
+  typealias Id = String
+  var id: Id
+  var hostname: String
+  var port: Int
+  var username: String
+  var password: String
+  var isConnected: Bool
 }
 
-final class RoutersController: UITableViewController {
+final class RoutersController: UITableViewController, StateSubscriber {
 
   var statsController: StatsController? = nil
-  var routers = [Router]() {
-    didSet {
-      DispatchQueue.main.async {
-        self.tableView.reloadData()
-      }
-    }
-  }
+
+  // MARK: - Lifecycle
 
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -43,8 +41,29 @@ final class RoutersController: UITableViewController {
 
   override func viewWillAppear(_ animated: Bool) {
     clearsSelectionOnViewWillAppear = splitViewController!.isCollapsed
+    stateStore?.subscribe(self)
     super.viewWillAppear(animated)
   }
+
+  override func viewDidDisappear(_ animated: Bool) {
+    stateStore?.unsubscribe(self)
+  }
+
+  // MARK: - State
+
+  var stateStore: StateStore?
+  
+  func newState(_ state: State) {
+    routers = state.routers
+  }
+
+  var routers = [Router]() {
+    didSet {
+      self.tableView.reloadData()
+    }
+  }
+
+  // MARK: - Actions
 
   @objc
   func insertNewObject(_ sender: Any) {
@@ -62,8 +81,8 @@ final class RoutersController: UITableViewController {
       let navigation = segue.destination as? UINavigationController,
       let stats = navigation.topViewController as? StatsController
     else { return }
-    stats.stats = routers[indexPath.row].stats ?? []
-    stats.title = routers[indexPath.row].hostname
+    stats.stateStore = stateStore
+    stateStore?.select(routerId: routers[indexPath.row].id)
     stats.navigationItem.leftBarButtonItem =
       splitViewController?.displayModeButtonItem
     stats.navigationItem.leftItemsSupplementBackButton = true

@@ -14,15 +14,36 @@ final class MainController {
 
   let window: UIWindow
 
+  let stateStore: StateStore
+
   init(window: UIWindow) {
     self.window = window
+
+    let defaultRouter = Router(
+      id: UUID().uuidString,
+      hostname: "77.38.162.131",
+      port: 8728,
+      username: "ios",
+      password: "developer",
+      isConnected: true)
+
+    let initialState = State(
+      routers: [defaultRouter],
+      stats: [:],
+      selectedRouterId: nil)
+    stateStore = StateStore(initialState: initialState)
+
+    routersController?.stateStore = stateStore
 
     if let split = splitController, let top = split.topViewController {
       top.navigationItem.leftBarButtonItem = split.displayModeButtonItem
       split.delegate = self
     }
 
-    logIn(username: "ios", password: "developer")
+    logIn(
+      username: defaultRouter.username,
+      password: defaultRouter.password,
+      routerId: defaultRouter.id)
   }
 
   // MARK: - View controllers
@@ -34,6 +55,11 @@ final class MainController {
   var routersController: RoutersController? {
     return (splitController?.viewControllers.first as? UINavigationController)?
       .viewControllers.first as? RoutersController
+  }
+
+  var statsController: StatsController? {
+    return (splitController?.viewControllers.last as? UINavigationController)?
+      .viewControllers.first as? StatsController
   }
 
   // MARK: - RouterOS client
@@ -51,38 +77,49 @@ final class MainController {
     }
   }()
 
-  private func logIn(username: String, password: String) {
+  private func logIn(username: String, password: String, routerId: String) {
     do {
       let login = Sentence(words: [
         .command("login"),
         .attribute(key: "name", value: username),
         .attribute(key: "password", value: password),
       ])
-      try client?.send(sentence: login, onResponse: handleLoginResponse)
+      try client?.send(
+        sentence: login,
+        onResponse: { sentences in
+          self.handleLoginResponse(sentences, routerId: routerId)
+        })
     } catch {
       os_log("Error when logging in: %@", error as CVarArg)
     }
   }
 
-  private func handleLoginResponse(_ sentences: [Sentence]) {
+  private func handleLoginResponse(
+    _ sentences: [Sentence],
+    routerId: String
+  ) {
     if sentences.first?.words.first == .reply("done") {
-      getStats()
+      getStats(routerId: routerId)
     }
   }
 
-  private func getStats() {
+  private func getStats(routerId: String) {
     do {
       let getStats = Sentence(words: [
         .command("interface/print"),
         .attribute(key: "stats", value: nil),
       ])
-      try client?.send(sentence: getStats, onResponse: updateStats)
+      try client?.send(
+        sentence: getStats,
+        onResponse: { sentences in
+          self.updateStats(from: sentences, routerId: routerId)
+        })
     } catch {
       os_log("Error when printing status: %@", error as CVarArg)
     }
   }
 
-  private func updateStats(from sentences: [Sentence]) {
+  private func updateStats(from sentences: [Sentence], routerId: String) {
     os_log("Received stats: %@", sentences)
 
     let stats = sentences
@@ -98,13 +135,8 @@ final class MainController {
           }
         return Stats(pairs: pairs)
       }
-    let router = Router(
-      hostname: "77.38.162.131",
-      port: 8728,
-      isConnected: true,
-      stats: stats)
     DispatchQueue.main.async {
-      self.routersController?.routers.append(router)
+      self.stateStore.set(stats: stats, forRouterId: routerId)
     }
   }
 
