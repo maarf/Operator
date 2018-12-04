@@ -33,6 +33,17 @@ struct Stats {
   var name = "Unknown"
   var transferData = [TransferDataPoint]()
 
+  struct Item: Equatable {
+    let key: String
+    let title: String
+    let value: String
+    let size: Size
+
+    enum Size {
+      case compact, normal
+    }
+  }
+
   init(pairs: [(key: String, value: String)]) {
     transferData.append(TransferDataPoint(pairs: pairs))
     presentable = pairs
@@ -61,28 +72,11 @@ struct Stats {
         {
           value = formatted
         }
-        var title = key
-        title = title.capitalized
-        title = title.replacingOccurrences(of: "-", with: " ")
-        title = title.replacingOccurrences(of: "Mtu", with: "MTU")
-        title = title.replacingOccurrences(of: "Mac", with: "MAC")
-        title = title.replacingOccurrences(of: "Up Time", with: "Uptime")
-        title = title.replacingOccurrences(of: "Rx", with: "RX")
-        title = title.replacingOccurrences(of: "Tx", with: "TX")
-        title = title.replacingOccurrences(of: "Fp", with: "FP")
-        title = title.replacingOccurrences(of: "Byte", with: "Bytes")
-        title = title.replacingOccurrences(of: "Packet", with: "Packets")
-        title = title.replacingOccurrences(of: "Drop", with: "Drops")
-        title = title.replacingOccurrences(of: "Error", with: "Errors")
-        let isCompact = key.contains("byte")
-          || key.contains("packet")
-          || key.contains("drop")
-          || key.contains("error")
         return Item(
           key: key,
-          title: title,
+          title: format(title: key),
           value: value,
-          size: isCompact ? .compact : .normal)
+          size: isCompact(key: key) ? .compact : .normal)
       }
   }
 
@@ -105,15 +99,30 @@ struct Stats {
     }
   }
 
-  struct Item: Equatable {
-    let key: String
-    let title: String
-    let value: String
-    let size: Size
+  private func format(title: String) -> String {
+    var title = title.capitalized
+    title = title.replacingOccurrences(of: "-", with: " ")
+    title = title.replacingOccurrences(of: "Mtu", with: "MTU")
+    title = title.replacingOccurrences(of: "Mac", with: "MAC")
+    title = title.replacingOccurrences(of: "Up Time", with: "Uptime")
+    title = title.replacingOccurrences(of: "Rx", with: "RX")
+    title = title.replacingOccurrences(of: "Tx", with: "TX")
+    title = title.replacingOccurrences(of: "Fp", with: "FP")
+    title = title.replacingOccurrences(of: "Byte", with: "Bytes")
+    title = title.replacingOccurrences(of: "Packet", with: "Packets")
+    title = title.replacingOccurrences(of: "Drop", with: "Drops")
+    return title.replacingOccurrences(of: "Error", with: "Errors")
+  }
 
-    enum Size {
-      case compact, normal
+  private static let compactKeywords = Set(["byte", "packet", "drop", "error"])
+
+  private func isCompact(key: String) -> Bool {
+    for keyword in Stats.compactKeywords {
+      if key.contains(keyword) {
+        return true
+      }
     }
+    return false
   }
 }
 
