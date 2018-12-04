@@ -28,6 +28,7 @@ private let numberFormatter: NumberFormatter = {
   return formatter
 }()
 
+/// Model struct for router's statistics.
 struct Stats {
   var presentable = [Item]()
   var name = "Unknown"

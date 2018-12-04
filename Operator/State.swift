@@ -9,12 +9,14 @@
 import Foundation
 import os.log
 
+/// Represents most of the app's state.
 struct State {
   var routers: [Router]
   var stats: [Router.Id: [Stats]]
   var selectedRouterId: Router.Id?
 }
 
+/// Model struct for a router.
 struct Router: Equatable, Codable {
   typealias Id = String
   var id: Id
@@ -37,6 +39,10 @@ private class SubscriberBox {
 }
 
 /// Very minimal Redux-inspired state store.
+///
+/// The core idea is to have a single source of truth for state, that is only
+/// mutable by calling actions on the store. Everything that consumes or
+/// presents state can get it by subscribing to state using store.
 final class StateStore {
 
   private var state: State {
@@ -73,6 +79,7 @@ final class StateStore {
 
   // MARK: - Actions
 
+  /// Adds a router to state.
   func addRouter(
     hostname: String,
     port: Int,
@@ -88,6 +95,7 @@ final class StateStore {
     store(routers: state.routers)
   }
 
+  /// Removes a router from state.
   func removeRouter(id: Router.Id) {
     if let index = state.routers.index(where: { $0.id == id }) {
       state.routers.remove(at: index)
@@ -95,6 +103,7 @@ final class StateStore {
     }
   }
 
+  /// Sets stats for a specific router.
   func set(stats: [Stats], forRouterId routerId: Router.Id) {
     if let existing = state.stats[routerId] {
       var updated = stats
@@ -111,6 +120,7 @@ final class StateStore {
     }
   }
 
+  /// Sets selected router.
   func select(routerId: Router.Id) {
     state.selectedRouterId = routerId
   }
