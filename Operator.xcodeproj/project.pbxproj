@@ -27,6 +27,7 @@
 		D46685FE21B59860009061C5 /* MainController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D46685FD21B59860009061C5 /* MainController.swift */; };
 		D466860221B64D9E009061C5 /* State.swift in Sources */ = {isa = PBXBuildFile; fileRef = D466860121B64D9E009061C5 /* State.swift */; };
 		D466860421B66321009061C5 /* ClientsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D466860321B66321009061C5 /* ClientsController.swift */; };
+		D466860621B6739E009061C5 /* Stats.swift in Sources */ = {isa = PBXBuildFile; fileRef = D466860521B6739E009061C5 /* Stats.swift */; };
 		E1C2339F92CE0B2CF390DFE7 /* Pods_Operator.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 06C2B33A4D306D94151D7E1C /* Pods_Operator.framework */; };
 /* End PBXBuildFile section */
 
@@ -114,6 +115,7 @@
 		D46685FD21B59860009061C5 /* MainController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainController.swift; sourceTree = "<group>"; };
 		D466860121B64D9E009061C5 /* State.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = State.swift; sourceTree = "<group>"; };
 		D466860321B66321009061C5 /* ClientsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientsController.swift; sourceTree = "<group>"; };
+		D466860521B6739E009061C5 /* Stats.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Stats.swift; sourceTree = "<group>"; };
 		F1A1EC81979BB501F9F928F1 /* Pods-Interpreter.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Interpreter.debug.xcconfig"; path = "Target Support Files/Pods-Interpreter/Pods-Interpreter.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -214,6 +216,7 @@
 				D46685FD21B59860009061C5 /* MainController.swift */,
 				D46685A521B5520B009061C5 /* RoutersController.swift */,
 				D466860121B64D9E009061C5 /* State.swift */,
+				D466860521B6739E009061C5 /* Stats.swift */,
 				D46685A721B5520B009061C5 /* StatsController.swift */,
 				D46685A921B5520C009061C5 /* Main.storyboard */,
 				D46685AC21B5520E009061C5 /* Assets.xcassets */,
@@ -549,6 +552,7 @@
 				D466860421B66321009061C5 /* ClientsController.swift in Sources */,
 				D46685A821B5520B009061C5 /* StatsController.swift in Sources */,
 				D46685A621B5520B009061C5 /* RoutersController.swift in Sources */,
+				D466860621B6739E009061C5 /* Stats.swift in Sources */,
 				D46685A421B5520B009061C5 /* AppDelegate.swift in Sources */,
 				D466860221B64D9E009061C5 /* State.swift in Sources */,
 				D46685FE21B59860009061C5 /* MainController.swift in Sources */,

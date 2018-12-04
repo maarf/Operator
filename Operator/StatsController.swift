@@ -8,79 +8,6 @@
 
 import UIKit
 
-private let inputFormatter: DateFormatter = {
-  let inputFormatter = DateFormatter()
-  inputFormatter.dateFormat = "MMM/dd/yyyy HH:mm:ss"
-  inputFormatter.locale = Locale(identifier: "en_US_POSIX")
-  return inputFormatter
-}()
-
-private let dateFormatter: DateFormatter = {
-  let dateFormatter = DateFormatter()
-  dateFormatter.dateStyle = .medium
-  dateFormatter.timeStyle = .medium
-  return dateFormatter
-}()
-
-struct Stats: Equatable {
-  let presentable: [Item]
-  let name: String
-  init(pairs: [(key: String, value: String)]) {
-    var proposedName = "Unknown"
-    presentable = pairs
-      .filter { key, value in
-        if key == ".id" {
-          return false
-        } else if key == "name" {
-          proposedName = value
-          return false
-        } else if key == "default-name" && value == proposedName {
-          return false
-        }
-        return true
-      }
-      .map { pair in
-        var (key, value) = pair
-        if
-          key == "last-link-up-time",
-          let date = inputFormatter.date(from: value)
-        {
-          value = dateFormatter.string(from: date)
-        }
-        var title = key
-        title = title.capitalized
-        title = title.replacingOccurrences(of: "-", with: " ")
-        title = title.replacingOccurrences(of: "Mtu", with: "MTU")
-        title = title.replacingOccurrences(of: "Mac", with: "MAC")
-        title = title.replacingOccurrences(of: "Up Time", with: "Uptime")
-        title = title.replacingOccurrences(of: "Rx", with: "RX")
-        title = title.replacingOccurrences(of: "Tx", with: "TX")
-        title = title.replacingOccurrences(of: "Fp", with: "FP")
-        title = title.replacingOccurrences(of: "Byte", with: "Bytes")
-        title = title.replacingOccurrences(of: "Packet", with: "Packets")
-        title = title.replacingOccurrences(of: "Drop", with: "Drops")
-        title = title.replacingOccurrences(of: "Error", with: "Errors")
-        let isCompact = key.contains("byte")
-          || key.contains("packet")
-          || key.contains("drop")
-          || key.contains("error")
-        return Item(
-          title: title,
-          value: value,
-          size: isCompact ? .compact : .normal)
-      }
-    name = proposedName
-  }
-  struct Item: Equatable {
-    let title: String
-    let value: String
-    let size: Size
-    enum Size {
-      case compact, normal
-    }
-  }
-}
-
 final class StatsController: UIViewController, StateSubscriber {
 
   @IBOutlet weak var collectionView: UICollectionView!
@@ -89,7 +16,6 @@ final class StatsController: UIViewController, StateSubscriber {
     super.viewDidLoad()
     collectionView.dataSource = self
     collectionView.delegate = self
-    collectionView.reloadData()
   }
 
   override func viewWillAppear(_ animated: Bool) {
@@ -121,7 +47,6 @@ final class StatsController: UIViewController, StateSubscriber {
       }
     }
   }
-
 }
 
 extension StatsController: UICollectionViewDataSource {

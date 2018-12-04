@@ -64,7 +64,19 @@ final class StateStore {
   // MARK: - Actions
 
   func set(stats: [Stats], forRouterId routerId: Router.Id) {
-    state.stats[routerId] = stats
+    if let existing = state.stats[routerId] {
+      var updated = stats
+      for one in existing {
+        if let index = updated.index(where: { $0.name == one.name }) {
+          var data = one.transferData
+          data.append(contentsOf: updated[index].transferData)
+          updated[index].transferData = data
+        }
+      }
+      state.stats[routerId] = updated
+    } else {
+      state.stats[routerId] = stats
+    }
   }
 
   func select(routerId: Router.Id) {
