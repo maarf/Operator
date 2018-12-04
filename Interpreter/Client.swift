@@ -9,48 +9,63 @@
 import Socket
 import Foundation
 
+public enum ClientError: Error {
+  case missingSocket
+}
+
 public class Client {
 
-  private let socket: Socket
-  private let onReceive: (([Sentence]) -> Void)?
-  private let onError: ((Error) -> Void)?
+  public typealias ResponseBlock = ([Sentence]) -> Void
+  public typealias ErrorBlock = (Error) -> Void
+
+  private let signature: Socket.Signature
+  private var socket: Socket?
+  private let onReceive: ResponseBlock?
+  private let onError: ErrorBlock?
   private let queue = DispatchQueue(
     label: "Interpreter.Client.queue",
     qos: DispatchQoS.utility)
   private var lastTag = 0
-  private var taggedOnResponse = [Int: ([Sentence]) -> Void]()
+  private var taggedOnResponse = [Int: ResponseBlock]()
+  public var isLoggedIn = false
 
   public init(
     hostname: String,
     port: UInt,
-    onReceive: @escaping ([Sentence]) -> Void,
-    onError: @escaping (Error) -> Void
+    onReceive: ResponseBlock? = nil,
+    onError: ErrorBlock? = nil
   ) throws {
     self.onReceive = onReceive
     self.onError = onError
-    let signature = try Socket.Signature(
+    signature = try Socket.Signature(
       protocolFamily: .inet,
       socketType: .stream,
       proto: .tcp,
       hostname: hostname,
       port: Int32(port))!
-    socket = try Socket.create(family: .inet)
-    try socket.connect(using: signature)
-    listen()
   }
 
   deinit {
-    socket.close()
+    if socket?.isConnected == true {
+      socket?.close()
+    }
+  }
+
+  public func conntect() throws {
+    socket = try Socket.create(family: .inet)
+    try socket?.connect(using: signature)
+    listen()
   }
 
   private func listen() {
     queue.async { [unowned self] in
+      guard let socket = self.socket else { return }
       // TODO: Ownership here is quite funky, this might crash.
       while true {
         var bytesRead = 0
         var data = Data()
         do {
-          bytesRead = try self.socket.read(into: &data)
+          bytesRead = try socket.read(into: &data)
         } catch {
           self.onError?(error)
         }
@@ -67,6 +82,7 @@ public class Client {
             self.onError?(error)
           }
         } else {
+          self.disconnected()
           return
         }
       }
@@ -77,6 +93,7 @@ public class Client {
     sentence: Sentence,
     onResponse: (([Sentence]) -> Void)? = nil
   ) throws {
+    guard let socket = socket else { throw ClientError.missingSocket }
     var sentence = sentence
     if let onResponse = onResponse {
       lastTag += 1
@@ -86,6 +103,35 @@ public class Client {
     sentence.words.append(.empty)
     let encoded = try encode(sentences: [sentence])
     try socket.write(from: encoded)
+  }
+
+  public var isConnected: Bool {
+    return socket?.isConnected ?? false
+  }
+
+  private func disconnected() {
+    socket?.close()
+    socket = nil
+    taggedOnResponse = [:]
+    isLoggedIn = false
+  }
+
+  public func logIn(
+    username: String,
+    password: String,
+    onResponse: ResponseBlock?
+  ) throws {
+    let login = Sentence(words: [
+      .command("login"),
+      .attribute(key: "name", value: username),
+      .attribute(key: "password", value: password),
+    ])
+    try send(
+      sentence: login,
+      onResponse: { sentences in
+        self.isLoggedIn = true
+        onResponse?(sentences)
+    })
   }
 
   private func groupByTags(sentences: [Sentence]) -> [Int: [Sentence]] {
