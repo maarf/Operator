@@ -14,6 +14,10 @@ public enum EncodingError: Error {
   case cantEncodeContentToData
 }
 
+/// Encodes the sentences to data using API format.
+///
+/// - Parameter sentences: The sentence to encode.
+/// - Returns: Encoded data.
 public func encode(sentences: [Sentence]) throws -> Data {
   var data = Data()
   for sentence in sentences {
@@ -72,6 +76,10 @@ public enum DecodingError: Error {
   case unrecognizedWord
 }
 
+/// Decodes the data into senctences using API format.
+///
+/// - Parameter data: The data to decode.
+/// - Returns: Decoded sentences.
 public func decode(data: Data) throws -> [Sentence] {
   var iterator = data.makeIterator()
   var sentences = [Sentence]()

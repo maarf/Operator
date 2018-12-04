@@ -13,6 +13,7 @@ public enum ClientError: Error {
   case missingSocket
 }
 
+/// Represents a client to router.
 public class Client {
 
   public typealias ResponseBlock = ([Sentence]) -> Void
@@ -29,6 +30,14 @@ public class Client {
   private var taggedOnResponse = [Int: ResponseBlock]()
   public var isLoggedIn = false
 
+  /// Creates a client to router.
+  ///
+  /// - Parameters:
+  ///   - hostname: The router's hostname.
+  ///   - port: The router's path.
+  ///   - onReceive: Optional block that receives all responses from router.
+  ///                Handy for logging.
+  ///   - onError: Optional block that receives all errors. Handly for logging.
   public init(
     hostname: String,
     port: UInt,
@@ -51,6 +60,7 @@ public class Client {
     }
   }
 
+  /// Connects to the router using given hostname and port.
   public func conntect() throws {
     socket = try Socket.create(family: .inet)
     try socket?.connect(using: signature)
@@ -89,6 +99,14 @@ public class Client {
     }
   }
 
+  /// Sends the sentence to router.
+  ///
+  /// Adds an empty word at the end of sentence. Adds a tag if response block is
+  /// given.
+  ///
+  /// - Parameters:
+  ///   - sentence: The sentence to send to router.
+  ///   - onResponse: Optional block that is called with received sentences.
   public func send(
     sentence: Sentence,
     onResponse: (([Sentence]) -> Void)? = nil
@@ -116,6 +134,12 @@ public class Client {
     isLoggedIn = false
   }
 
+  /// Sends a log in sentence to router.
+  ///
+  /// - Parameters:
+  ///   - username: The username to log in with.
+  ///   - password: The password to log in with.
+  ///   - onResponse: Optional black that is called with received sentences.
   public func logIn(
     username: String,
     password: String,

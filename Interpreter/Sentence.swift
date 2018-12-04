@@ -6,6 +6,7 @@
 //  Copyright © 2018 Good Gets Better. All rights reserved.
 //
 
+/// Represents an API sentence, a group of words.
 public struct Sentence: Equatable {
   public var words: [Word]
 
@@ -18,6 +19,7 @@ public struct Sentence: Equatable {
   }
 }
 
+/// Represents an API word.
 public enum Word: RawRepresentable, Equatable {
   case command(String)
   case reply(String)
