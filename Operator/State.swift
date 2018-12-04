@@ -7,11 +7,21 @@
 //
 
 import Foundation
+import os.log
 
 struct State {
   var routers: [Router]
   var stats: [Router.Id: [Stats]]
   var selectedRouterId: Router.Id?
+}
+
+struct Router: Equatable, Codable {
+  typealias Id = String
+  var id: Id
+  var hostname: String
+  var port: Int
+  var username: String
+  var password: String
 }
 
 protocol StateSubscriber: NSObjectProtocol {
@@ -75,11 +85,13 @@ final class StateStore {
       port: port,
       username: username,
       password: password))
+    store(routers: state.routers)
   }
 
   func removeRouter(id: Router.Id) {
     if let index = state.routers.index(where: { $0.id == id }) {
       state.routers.remove(at: index)
+      store(routers: state.routers)
     }
   }
 
@@ -101,5 +113,23 @@ final class StateStore {
 
   func select(routerId: Router.Id) {
     state.selectedRouterId = routerId
+  }
+}
+
+// MARK: - Router persistence
+
+private func store(routers: [Router]) {
+  do {
+    var url = try FileManager.default.url(
+      for: .applicationSupportDirectory,
+      in: .userDomainMask,
+      appropriateFor: nil,
+      create: true)
+    url.appendPathComponent("routers.json")
+    let encoder = JSONEncoder()
+    let data = try encoder.encode(routers)
+    try data.write(to: url)
+  } catch {
+    os_log("Can't store routers, error %@", error as CVarArg)
   }
 }

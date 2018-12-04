@@ -8,15 +8,6 @@
 
 import UIKit
 
-struct Router: Equatable {
-  typealias Id = String
-  var id: Id
-  var hostname: String
-  var port: Int
-  var username: String
-  var password: String
-}
-
 final class RoutersController: UITableViewController, StateSubscriber {
 
   var statsController: StatsController? = nil

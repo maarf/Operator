@@ -18,15 +18,8 @@ final class MainController {
   init(window: UIWindow) {
     self.window = window
 
-    let defaultRouter = Router(
-      id: UUID().uuidString,
-      hostname: "77.38.162.131",
-      port: 8728,
-      username: "ios",
-      password: "developer")
-
     let initialState = State(
-      routers: [defaultRouter],
+      routers: loadRouters(),
       stats: [:],
       selectedRouterId: nil)
     stateStore = StateStore(initialState: initialState)
@@ -73,5 +66,28 @@ extension MainController: UISplitViewControllerDelegate {
 extension UISplitViewController {
   var topViewController: UIViewController? {
     return (viewControllers.last as? UINavigationController)?.topViewController
+  }
+}
+
+// MARK: - Router persistence
+
+private func loadRouters() -> [Router] {
+  do {
+    var url = try FileManager.default.url(
+      for: .applicationSupportDirectory,
+      in: .userDomainMask,
+      appropriateFor: nil,
+      create: false)
+    url.appendPathComponent("routers.json")
+    let data = try Data(contentsOf: url)
+    let decoder = JSONDecoder()
+    return try decoder.decode([Router].self, from: data)
+  } catch {
+    return [Router(
+      id: UUID().uuidString,
+      hostname: "77.38.162.131",
+      port: 8728,
+      username: "ios",
+      password: "developer")]
   }
 }
