@@ -23,8 +23,7 @@ final class MainController {
       hostname: "77.38.162.131",
       port: 8728,
       username: "ios",
-      password: "developer",
-      isConnected: true)
+      password: "developer")
 
     let initialState = State(
       routers: [defaultRouter],

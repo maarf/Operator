@@ -15,7 +15,6 @@ struct Router: Equatable {
   var port: Int
   var username: String
   var password: String
-  var isConnected: Bool
 }
 
 final class RoutersController: UITableViewController, StateSubscriber {
@@ -28,11 +27,6 @@ final class RoutersController: UITableViewController, StateSubscriber {
     super.viewDidLoad()
     navigationItem.leftBarButtonItem = editButtonItem
 
-    let addButton = UIBarButtonItem(
-      barButtonSystemItem: .add,
-      target: self,
-      action: #selector(insertNewObject(_:)))
-    navigationItem.rightBarButtonItem = addButton
     if let split = splitViewController {
       statsController = (split.viewControllers.last as? UINavigationController)?
         .topViewController as? StatsController
@@ -63,29 +57,28 @@ final class RoutersController: UITableViewController, StateSubscriber {
     }
   }
 
-  // MARK: - Actions
-
-  @objc
-  func insertNewObject(_ sender: Any) {
-//    objects.insert(NSDate(), at: 0)
-//    let indexPath = IndexPath(row: 0, section: 0)
-//    tableView.insertRows(at: [indexPath], with: .automatic)
-  }
-
   // MARK: - Segues
 
   override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-    guard
+    if
       segue.identifier == "showDetail",
       let indexPath = tableView.indexPathForSelectedRow,
       let navigation = segue.destination as? UINavigationController,
       let stats = navigation.topViewController as? StatsController
-    else { return }
-    stats.stateStore = stateStore
-    stateStore?.select(routerId: routers[indexPath.row].id)
-    stats.navigationItem.leftBarButtonItem =
-      splitViewController?.displayModeButtonItem
-    stats.navigationItem.leftItemsSupplementBackButton = true
+    {
+      stats.stateStore = stateStore
+      stateStore?.select(routerId: routers[indexPath.row].id)
+      stats.navigationItem.leftBarButtonItem =
+        splitViewController?.displayModeButtonItem
+      stats.navigationItem.leftItemsSupplementBackButton = true
+
+    } else if
+      segue.identifier == "addRouter",
+      let navigation = segue.destination as? UINavigationController,
+      let editRouter = navigation.topViewController as? EditRouterController
+    {
+      editRouter.stateStore = stateStore
+    }
   }
 
   // MARK: - Table View

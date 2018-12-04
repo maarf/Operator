@@ -63,6 +63,20 @@ final class StateStore {
 
   // MARK: - Actions
 
+  func addRouter(
+    hostname: String,
+    port: Int,
+    username: String,
+    password: String
+  ) {
+    state.routers.append(Router(
+      id: UUID().uuidString,
+      hostname: hostname,
+      port: port,
+      username: username,
+      password: password))
+  }
+
   func set(stats: [Stats], forRouterId routerId: Router.Id) {
     if let existing = state.stats[routerId] {
       var updated = stats
