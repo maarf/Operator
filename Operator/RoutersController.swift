@@ -63,6 +63,7 @@ final class RoutersController: UITableViewController {
       let stats = navigation.topViewController as? StatsController
     else { return }
     stats.stats = routers[indexPath.row].stats ?? []
+    stats.title = routers[indexPath.row].hostname
     stats.navigationItem.leftBarButtonItem =
       splitViewController?.displayModeButtonItem
     stats.navigationItem.leftItemsSupplementBackButton = true
