@@ -53,7 +53,9 @@ final class RoutersController: UITableViewController, StateSubscriber {
 
   var routers = [Router]() {
     didSet {
-      self.tableView.reloadData()
+      if routers != oldValue {
+        self.tableView.reloadData()
+      }
     }
   }
 
@@ -119,8 +121,7 @@ final class RoutersController: UITableViewController, StateSubscriber {
     forRowAt indexPath: IndexPath
   ) {
     if editingStyle == .delete {
-      routers.remove(at: indexPath.row)
-      tableView.deleteRows(at: [indexPath], with: .fade)
+      stateStore?.removeRouter(id: routers[indexPath.row].id)
     }
   }
 }

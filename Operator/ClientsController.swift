@@ -53,7 +53,8 @@ final class ClientsController: NSObject, StateSubscriber {
     }
     for routerId in clients.keys {
       if !state.routers.contains(where: { $0.id == routerId}) {
-        clients.removeValue(forKey: routerId)
+        let clientState = clients.removeValue(forKey: routerId)
+        clientState?.timer.invalidate()
       }
     }
   }

@@ -77,6 +77,12 @@ final class StateStore {
       password: password))
   }
 
+  func removeRouter(id: Router.Id) {
+    if let index = state.routers.index(where: { $0.id == id }) {
+      state.routers.remove(at: index)
+    }
+  }
+
   func set(stats: [Stats], forRouterId routerId: Router.Id) {
     if let existing = state.stats[routerId] {
       var updated = stats
