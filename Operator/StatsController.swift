@@ -24,9 +24,21 @@ private let dateFormatter: DateFormatter = {
 
 struct Stats: Equatable {
   let presentable: [Item]
+  let name: String
   init(pairs: [(key: String, value: String)]) {
+    var proposedName = "Unknown"
     presentable = pairs
-      .filter { key, _ in key != ".id" }
+      .filter { key, value in
+        if key == ".id" {
+          return false
+        } else if key == "name" {
+          proposedName = value
+          return false
+        } else if key == "default-name" && value == proposedName {
+          return false
+        }
+        return true
+      }
       .map { pair in
         var (key, value) = pair
         if
@@ -57,6 +69,7 @@ struct Stats: Equatable {
           value: value,
           size: isCompact ? .compact : .normal)
       }
+    name = proposedName
   }
   struct Item: Equatable {
     let title: String
@@ -112,6 +125,22 @@ extension StatsController: UICollectionViewDataSource {
     cell.titleLabel.text = item.title
     cell.valueLabel.text = item.value
     return cell
+  }
+
+  func collectionView(
+    _ collectionView: UICollectionView,
+    viewForSupplementaryElementOfKind kind: String,
+    at indexPath: IndexPath
+  ) -> UICollectionReusableView {
+    guard let view = collectionView.dequeueReusableSupplementaryView(
+      ofKind: kind,
+      withReuseIdentifier: "StatsSectionHeader",
+      for: indexPath) as? StatsSectionHeader
+    else {
+      return UICollectionReusableView()
+    }
+    view.titleLabel.text = stats[indexPath.section].name
+    return view
   }
 }
 
@@ -173,4 +202,10 @@ final class StatsItemCell: UICollectionViewCell {
     layer.backgroundColor = UIColor(white: 0.84, alpha: 1).cgColor
     return layer
   }()
+}
+
+final class StatsSectionHeader: UICollectionReusableView {
+
+  @IBOutlet weak var titleLabel: UILabel!
+
 }
