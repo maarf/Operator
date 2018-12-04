@@ -22,6 +22,12 @@ private let dateFormatter: DateFormatter = {
   return dateFormatter
 }()
 
+private let numberFormatter: NumberFormatter = {
+  let formatter = NumberFormatter()
+  formatter.numberStyle = .decimal
+  return formatter
+}()
+
 struct Stats {
   var presentable = [Item]()
   var name = "Unknown"
@@ -48,6 +54,12 @@ struct Stats {
           let date = inputFormatter.date(from: value)
         {
           value = dateFormatter.string(from: date)
+        } else if
+          let int = Int(value),
+          let formatted = numberFormatter.string(
+            from: NSNumber(integerLiteral: int))
+        {
+          value = formatted
         }
         var title = key
         title = title.capitalized
