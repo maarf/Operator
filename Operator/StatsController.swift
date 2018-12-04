@@ -122,9 +122,9 @@ extension StatsController: UICollectionViewDelegateFlowLayout {
       - (collectionView.window?.safeAreaInsets.right ?? 0)
     switch item.size {
       case .compact:
-        let columns = min(safeWidth / 120, 4)
+        let columns = min(Int(safeWidth) / 120, 4)
         return CGSize(
-          width: floor(safeWidth / columns),
+          width: floor(safeWidth / CGFloat(columns)),
           height: 52)
       case .normal:
         return CGSize(

@@ -78,20 +78,20 @@
                                         </connections>
                                     </collectionViewCell>
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="StatsCompactItemCell" id="g6O-80-Hoa" customClass="StatsItemCell" customModule="Operator" customModuleProvider="target">
-                                        <rect key="frame" x="125" y="76" width="125" height="52"/>
+                                        <rect key="frame" x="137.5" y="76" width="100" height="52"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
-                                            <rect key="frame" x="0.0" y="0.0" width="125" height="52"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="100" height="52"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="749" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="T6T-qc-gic">
-                                                    <rect key="frame" x="12" y="7" width="25" height="14.5"/>
+                                                    <rect key="frame" x="12" y="8" width="25" height="14.5"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="252" verticalHuggingPriority="251" text="Value" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YQa-bc-STV">
-                                                    <rect key="frame" x="12" y="23.5" width="42" height="21"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="252" verticalHuggingPriority="251" text="Value" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="9" translatesAutoresizingMaskIntoConstraints="NO" id="YQa-bc-STV">
+                                                    <rect key="frame" x="12" y="24.5" width="88" height="21"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <nil key="highlightedColor"/>
@@ -101,10 +101,11 @@
                                         <constraints>
                                             <constraint firstItem="YQa-bc-STV" firstAttribute="top" secondItem="T6T-qc-gic" secondAttribute="bottom" constant="2" id="88e-5A-qrk"/>
                                             <constraint firstItem="T6T-qc-gic" firstAttribute="leading" secondItem="g6O-80-Hoa" secondAttribute="leading" constant="12" id="Lo0-9U-7cB"/>
+                                            <constraint firstAttribute="trailing" secondItem="YQa-bc-STV" secondAttribute="trailing" id="gIw-4H-PFh"/>
                                             <constraint firstItem="YQa-bc-STV" firstAttribute="leading" secondItem="g6O-80-Hoa" secondAttribute="leading" constant="12" id="nLj-k1-tQt"/>
-                                            <constraint firstItem="T6T-qc-gic" firstAttribute="top" secondItem="g6O-80-Hoa" secondAttribute="top" constant="7" id="qxx-h7-o1T"/>
+                                            <constraint firstItem="T6T-qc-gic" firstAttribute="top" secondItem="g6O-80-Hoa" secondAttribute="top" constant="8" id="qxx-h7-o1T"/>
                                         </constraints>
-                                        <size key="customSize" width="125" height="52"/>
+                                        <size key="customSize" width="100" height="52"/>
                                         <connections>
                                             <outlet property="titleLabel" destination="T6T-qc-gic" id="PB8-o8-fXR"/>
                                             <outlet property="valueLabel" destination="YQa-bc-STV" id="q8q-w0-0jy"/>
