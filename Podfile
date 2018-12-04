@@ -12,3 +12,7 @@ end
 target 'Interpreter' do
   pod 'BlueSocket', bluesocket_version
 end
+
+target 'InterpreterTests' do
+  pod 'BlueSocket', bluesocket_version
+end

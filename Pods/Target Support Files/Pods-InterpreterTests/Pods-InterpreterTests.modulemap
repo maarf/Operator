@@ -1,0 +1,6 @@
+framework module Pods_InterpreterTests {
+  umbrella header "Pods-InterpreterTests-umbrella.h"
+
+  export *
+  module * { export * }
+}
